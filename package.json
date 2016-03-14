@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-adapter-pattern",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "An ember-cli addon to standardise a common adapter pattern.",
   "directories": {
     "doc": "doc",
