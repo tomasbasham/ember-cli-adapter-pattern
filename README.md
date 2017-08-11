@@ -1,6 +1,6 @@
 # Ember-cli-adapter-pattern [![Build Status](https://travis-ci.org/tomasbasham/ember-cli-adapter-pattern.svg?branch=master)](https://travis-ci.org/tomasbasham/ember-cli-adapter-pattern)
 
-An [Ember CLI](http://www.ember-cli.com/) addon to standardise a common adapter pattern.
+An [Ember CLI](https://ember-cli.com/) addon to standardise a common adapter pattern.
 
 The adapter pattern helps to provide a common interface from which two incompatible interface may work together. For example you may wish to include in your applications the ability to authenticate users through a variety of social platforms (i.e. Facebook and Twitter). Each platform defines its own API which to interface with it's servers. Using the adapter pattern you can separate the logic of both APIs into their own adapter objects, using a common interface to work with both.
 
@@ -138,18 +138,18 @@ Here we are passing the name of the API call as the first argument to `invoke` f
 
 ### Installation
 
-* `git clone` this repository
+* `git clone <repository-url>` this repository
+* `cd ember-cli-adapter-pattern`
 * `npm install`
-* `bower install`
 
 ### Running
 
-* `ember server`
-* Visit your app at http://localhost:4200.
+* `ember serve`
+* Visit your app at [http://localhost:4200](http://localhost:4200).
 
 ### Running Tests
 
-* `npm test` (Runs `ember try:testall` to test your addon against multiple Ember versions)
+* `npm test` (Runs `ember try:each` to test your addon against multiple Ember versions)
 * `ember test`
 * `ember test --server`
 
@@ -157,4 +157,4 @@ Here we are passing the name of the API call as the first argument to `invoke` f
 
 * `ember build`
 
-For more information on using ember-cli, visit [http://www.ember-cli.com/](http://www.ember-cli.com/).
+For more information on using ember-cli, visit [https://ember-cli.com/](https://ember-cli.com/).
