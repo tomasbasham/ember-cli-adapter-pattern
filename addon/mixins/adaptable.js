@@ -81,7 +81,7 @@ export default Ember.Mixin.create({
     const adapter = this._lookupAdapter(name);
     assert(`Could not find adapter ${name}`, adapter);
 
-    return adapter.create({ this, config });
+    return adapter.create({ adaptable: this, config });
   },
 
   /*
