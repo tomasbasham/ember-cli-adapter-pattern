@@ -89,5 +89,5 @@ export default Ember.Object.extend({
    * @method makeItSo
    * @private
    */
-  _makeItSo: Ember.K
+  _makeItSo() {}
 });
