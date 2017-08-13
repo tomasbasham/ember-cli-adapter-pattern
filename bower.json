@@ -1,6 +1,0 @@
-{
-  "name": "ember-cli-adapter-pattern",
-  "dependencies": {
-    "sinonjs": "^1.17.1"
-  }
-}
