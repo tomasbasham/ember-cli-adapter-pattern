@@ -1,13 +1,11 @@
-import Ember from 'ember';
-import AdaptableMixin from '../../../mixins/adaptable';
-import Starship from '../../../starships/starship';
-import { module, test } from 'qunit';
+import EmberObject from '@ember/object';
 import Sinon from 'sinon';
 
-const {
-  get,
-  set
-} = Ember;
+import AdaptableMixin from 'ember-cli-adapter-pattern/mixins/adaptable';
+import Starship from 'dummy/starships/starship';
+
+import { get, set } from '@ember/object';
+import { module, test } from 'qunit';
 
 let sandbox, adapters;
 
@@ -38,33 +36,33 @@ module('Unit | Mixin | adaptable', {
 });
 
 test('it initialises the adapters object', function(assert) {
-  let AdaptableObject = Ember.Object.extend(AdaptableMixin);
+  let AdaptableObject = EmberObject.extend(AdaptableMixin);
   let subject = AdaptableObject.create();
 
   assert.deepEqual(get(subject, '_adapters'), {});
 });
 
 test('it initialises the context object', function(assert) {
-  let AdaptableObject = Ember.Object.extend(AdaptableMixin);
+  let AdaptableObject = EmberObject.extend(AdaptableMixin);
   let subject = AdaptableObject.create();
 
   assert.deepEqual(get(subject, 'context'), {});
 });
 
 test('it registers configured adapters', function(assert) {
-  let AdaptableObject = Ember.Object.extend(AdaptableMixin);
+  let AdaptableObject = EmberObject.extend(AdaptableMixin);
   let subject = AdaptableObject.create();
 
   sandbox.stub(subject, '_lookupAdapter', function() {
     return Starship; // Return a non-instantiated adapter.
-  });
+  })
 
   subject.activateAdapters(adapters.starships);
   assert.ok(subject);
 });
 
 test('it passes config options to the configured adapters', function(assert) {
-  let AdaptableObject = Ember.Object.extend(AdaptableMixin);
+  let AdaptableObject = EmberObject.extend(AdaptableMixin);
   let subject = AdaptableObject.create();
 
   sandbox.stub(subject, '_lookupAdapter', function() {
@@ -78,7 +76,7 @@ test('it passes config options to the configured adapters', function(assert) {
 test('#invoke invokes the named method on activated adapters', function(assert) {
   assert.expect(6);
 
-  let AdaptableObject = Ember.Object.extend(AdaptableMixin);
+  let AdaptableObject = EmberObject.extend(AdaptableMixin);
   let subject = AdaptableObject.create();
 
   sandbox.stub(subject, '_lookupAdapter', function() {
@@ -111,7 +109,7 @@ test('#invoke invokes the named method on activated adapters', function(assert) 
 test('#invoke invokes the named method on a single activated adapter', function(assert) {
   assert.expect(3);
 
-  let AdaptableObject = Ember.Object.extend(AdaptableMixin);
+  let AdaptableObject = EmberObject.extend(AdaptableMixin);
   let subject = AdaptableObject.create();
 
   sandbox.stub(subject, '_lookupAdapter', function() {
@@ -137,7 +135,7 @@ test('#invoke invokes the named method on a single activated adapter', function(
 test('#invoke includes `context` properties', function(assert) {
   assert.expect(3);
 
-  let AdaptableObject = Ember.Object.extend(AdaptableMixin);
+  let AdaptableObject = EmberObject.extend(AdaptableMixin);
   let subject = AdaptableObject.create();
 
   sandbox.stub(subject, '_lookupAdapter', function() {
@@ -164,7 +162,7 @@ test('#invoke includes `context` properties', function(assert) {
 test('#invoke does not leak options between calls', function(assert) {
   assert.expect(3);
 
-  let AdaptableObject = Ember.Object.extend(AdaptableMixin);
+  let AdaptableObject = EmberObject.extend(AdaptableMixin);
   let subject = AdaptableObject.create();
 
   sandbox.stub(subject, '_lookupAdapter', function() {

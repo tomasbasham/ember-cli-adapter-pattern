@@ -1,8 +1,5 @@
-import Ember from 'ember';
-
-const {
-  assert
-} = Ember;
+import EmberError from '@ember/error';
+import { assert } from '@ember/debug';
 
 /*
  * Utility method, returning a proxy function
@@ -23,7 +20,7 @@ export default function proxyToAdapter(methodName) {
 
   return function(...args) {
     if (!this.invoke && typeof this.invoke !== 'function') {
-      throw new Ember.Error('No invoke method. Have you forgotten to include the Adaptable mixin?');
+      throw new EmberError('No invoke method. Have you forgotten to include the Adaptable mixin?');
     }
 
     return this.invoke(methodName, ...args);

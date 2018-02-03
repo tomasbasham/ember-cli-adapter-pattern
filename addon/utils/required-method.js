@@ -1,8 +1,5 @@
-import Ember from 'ember';
-
-const {
-  assert
-} = Ember;
+import EmberError from '@ember/error';
+import { assert } from '@ember/debug';
 
 /*
  * Utility method, returning a function that
@@ -21,6 +18,6 @@ export default function requiredMethod(methodName) {
   assert('Method name is required for requiredMethod.', methodName);
 
   return function() {
-    throw new Ember.Error(`Definition of method ${methodName} is required.`);
+    throw new EmberError(`Definition of method ${methodName} is required.`);
   };
 }

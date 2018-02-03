@@ -1,4 +1,4 @@
-# Ember-cli-adapter-pattern [![Build Status](https://travis-ci.org/tomasbasham/ember-cli-adapter-pattern.svg?branch=master)](https://travis-ci.org/tomasbasham/ember-cli-adapter-pattern)
+# ember-cli-adapter-pattern [![Build Status](https://travis-ci.org/tomasbasham/ember-cli-adapter-pattern.svg?branch=master)](https://travis-ci.org/tomasbasham/ember-cli-adapter-pattern)
 
 An [Ember CLI](https://ember-cli.com/) addon to standardise a common adapter
 pattern.
@@ -37,11 +37,19 @@ service.
 
 ```JavaScript
 // app/services/social.js
-import Ember from 'ember';
+import Service from '@ember/service';
+
 import Adaptable from 'ember-cli-adapter-pattern/mixins/adaptable';
 import proxyToAdapter from 'ember-cli-adapter-pattern/utils/proxy-to-adapter';
 
-export default Ember.Service.extend(Adaptable, {
+import { getOwner } from '@ember/application';
+import { A } from '@ember/array';
+import { assert } from '@ember/debug';
+import { get, getWithDefault } from '@ember/object';
+import { on } from '@embber/object/evented';
+import { dasherize } from '@ember/string';
+
+export default Service.extend(Adaptable, {
   login: proxyToAdapter('login'), // Provides a safe method to proxy your API to each adapter.
 
   /**
@@ -51,13 +59,14 @@ export default Ember.Service.extend(Adaptable, {
    * `activateAdapters` method is
    * called.
    */
-  createAdapters: Ember.on('init', function() {
-    const adapters = Ember.getWithDefault(this, 'property.with.adapter.configurations', Ember.A());
+  createAdapters: on('init', function() {
+    const adapters = getWithDefault(this, 'property.with.adapter.configurations', A());
 
     this.set('_adapters', {});
     this.set('context', {});
 
-    this.activateAdapters(adapters); // This is important and activates configured adapters.
+    // Activate configured adapter.
+    this.activateAdapters(adapters);
   }),
 
   /**
@@ -68,11 +77,11 @@ export default Ember.Service.extend(Adaptable, {
    * container.
    */
   _lookupAdapter(adapterName) {
-    Ember.assert('Could not find adapter without a name', adapterName);
+    assert('Could not find adapter without a name', adapterName);
 
-    const container = this.get('container');
-    const dasherizedAdapterName = Ember.String.dasherize(adapterName);
-    const adapter = container.lookup(`container:${dasherizedAdapterName}`);
+    const owner = getOwner(this);
+    const dasherizedAdapterName = dasherize(adapterName);
+    const adapter = owner.lookup(`container:${dasherizedAdapterName}`);
 
     return adapter;
   }
@@ -92,14 +101,18 @@ ember object (i.e. a controller) and invoke it as normal.
 
 ```JavaScript
 // app/controller/application.js
-import Ember from 'ember';
+import Controller from '@ember/controller';
 
-export default Ember.Controller.extend({
-  social: Ember.Service.inject(),
+import { get } from '@ember/object';
+import { inject } from '@ember/service';
+
+export default Controller.extend({
+  social: inject(),
 
   actions: {
     loginWithService() {
-      this.get('social').login({ username: 'Jean-Luc Picard', password: 'Enterprise-D' });
+      const social = get(this, 'social');
+      social.login({ username: 'Jean-Luc Picard', password: 'Enterprise-D' });
     }
   }
 });
@@ -115,14 +128,17 @@ then you must pass in it's name to the API call.
 
 ```JavaScript
 // app/controller/application.js
-import Ember from 'ember';
+import Controller from '@ember/controller';
 
-export default Ember.Controller.extend({
-  social: Ember.Service.inject(),
+import { get } from '@ember/object';
+import { inject } from '@ember/service';
+
+export default Controller.extend({
+  social: inject(),
 
   actions: {
     loginWithService() {
-      this.get('social').login('Facebook', { username: 'Jean-Luc Picard', password: 'Enterprise-D' });
+      get(this, 'social').login('Facebook', { username: 'Jean-Luc Picard', password: 'Enterprise-D' });
     }
   }
 });
@@ -146,10 +162,10 @@ within the `Adaptable` mixin.
 
 ```JavaScript
 // app/services/social.js
-import Ember from 'ember';
+import Service from '@ember/service';
 import Adaptable from 'ember-cli-adapter-pattern/mixins/adaptable';
 
-export default Ember.Service.extend(Adaptable, {
+export default Service.extend(Adaptable, {
   login(...args) {
     // Extended operations here.
     this.invoke('login', ...args);

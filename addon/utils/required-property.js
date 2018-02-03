@@ -1,9 +1,7 @@
-import Ember from 'ember';
+import EmberError from '@ember/error';
 
-const {
-  assert,
-  computed
-} = Ember;
+import { assert } from '@ember/debug';
+import { computed } from '@ember/object';
 
 /*
  * Utility method, returning a computed
@@ -23,6 +21,6 @@ export default function requiredProperty(propertyName) {
   assert('Property name is required for requiredProperty.', propertyName);
 
   return computed(function() {
-    throw new Ember.Error(`Definition of property ${propertyName} is required.`);
+    throw new EmberError(`Definition of property ${propertyName} is required.`);
   });
 }

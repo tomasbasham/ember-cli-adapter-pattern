@@ -1,24 +1,15 @@
-import Ember from 'ember';
+import Mixin from '@ember/object/mixin';
+
 import requiredMethod from 'ember-cli-adapter-pattern/utils/required-method';
 
-const {
-  assert,
-  copy,
-  get,
-  merge,
-  on,
-  set
-} = Ember;
+import { assert } from '@ember/debug';
+import { get, set } from '@ember/object';
+import { on } from '@ember/object/evented';
+import { copy } from '@ember/object/internals';
+import { merge } from '@ember/polyfills';
+import { hash, resolve } from 'rsvp';
 
-const {
-  resolve
-} = Ember.RSVP;
-
-const {
-  keys
-} = Object;
-
-export default Ember.Mixin.create({
+export default Mixin.create({
 
   /*
    * A cache of active adapters to save
@@ -104,7 +95,7 @@ export default Ember.Mixin.create({
    */
   invoke(methodName, ...args) {
     const cachedAdapters = get(this, '_adapters');
-    const adapterNames = keys(cachedAdapters);
+    const adapterNames = Object.keys(cachedAdapters);
     const [selectedAdapterNames, options] = args.length > 1 ? [[args[0]], args[1]] : [adapterNames, args[0]];
     const context = copy(get(this, 'context'));
     const mergedOptions = merge(context, options);
@@ -117,7 +108,7 @@ export default Ember.Mixin.create({
       promises[adapterName] = resolve(adapter[methodName].call(adapter, mergedOptions));
     });
 
-    return Ember.RSVP.hash(promises);
+    return hash(promises);
   },
 
   /*

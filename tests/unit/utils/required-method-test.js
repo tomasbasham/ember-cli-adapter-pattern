@@ -1,5 +1,8 @@
-import Ember from 'ember';
-import requiredMethod from '../../../utils/required-method';
+import EmberError from '@ember/error';
+import EmberObject from '@ember/object';
+
+import requiredMethod from 'dummy/utils/required-method';
+
 import { module, test } from 'qunit';
 
 module('Unit | Utility | required method');
@@ -11,12 +14,12 @@ test('it throws an exception if a method name is not specified', function(assert
 });
 
 test('it throws an exception for missing method', function(assert) {
-  const AdaptableObject = Ember.Object.extend({
+  const AdaptableObject = EmberObject.extend({
     missingMethod: requiredMethod('missingMethod')
   });
 
   let subject = AdaptableObject.create();
   assert.throws(function() {
     subject.missingMethod();
-  }, Ember.Error, /missingMethod/);
+  }, EmberError, /missingMethod/);
 });
