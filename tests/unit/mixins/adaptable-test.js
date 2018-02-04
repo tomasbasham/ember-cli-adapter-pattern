@@ -53,7 +53,7 @@ test('it registers configured adapters', function(assert) {
   let AdaptableObject = EmberObject.extend(AdaptableMixin);
   let subject = AdaptableObject.create();
 
-  sandbox.stub(subject, '_lookupAdapter', function() {
+  sandbox.stub(subject, '_lookupAdapter').callsFake(function() {
     return Starship; // Return a non-instantiated adapter.
   })
 
@@ -65,7 +65,7 @@ test('it passes config options to the configured adapters', function(assert) {
   let AdaptableObject = EmberObject.extend(AdaptableMixin);
   let subject = AdaptableObject.create();
 
-  sandbox.stub(subject, '_lookupAdapter', function() {
+  sandbox.stub(subject, '_lookupAdapter').callsFake(function() {
     return Starship; // Return a non-instantiated adapter.
   });
 
@@ -79,7 +79,7 @@ test('#invoke invokes the named method on activated adapters', function(assert) 
   let AdaptableObject = EmberObject.extend(AdaptableMixin);
   let subject = AdaptableObject.create();
 
-  sandbox.stub(subject, '_lookupAdapter', function() {
+  sandbox.stub(subject, '_lookupAdapter').callsFake(function() {
     return Starship; // Return a non-instantiated adapter.
   });
 
@@ -112,7 +112,7 @@ test('#invoke invokes the named method on a single activated adapter', function(
   let AdaptableObject = EmberObject.extend(AdaptableMixin);
   let subject = AdaptableObject.create();
 
-  sandbox.stub(subject, '_lookupAdapter', function() {
+  sandbox.stub(subject, '_lookupAdapter').callsFake(function() {
     return Starship; // Return a non-instantiated adapter.
   });
 
@@ -138,7 +138,7 @@ test('#invoke includes `context` properties', function(assert) {
   let AdaptableObject = EmberObject.extend(AdaptableMixin);
   let subject = AdaptableObject.create();
 
-  sandbox.stub(subject, '_lookupAdapter', function() {
+  sandbox.stub(subject, '_lookupAdapter').callsFake(function() {
     return Starship; // Return a non-instantiated adapter.
   });
 
@@ -165,7 +165,7 @@ test('#invoke does not leak options between calls', function(assert) {
   let AdaptableObject = EmberObject.extend(AdaptableMixin);
   let subject = AdaptableObject.create();
 
-  sandbox.stub(subject, '_lookupAdapter', function() {
+  sandbox.stub(subject, '_lookupAdapter').callsFake(function() {
     return Starship; // Return a non-instantiated adapter.
   });
 
