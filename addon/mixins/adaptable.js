@@ -5,9 +5,9 @@ import requiredMethod from 'ember-cli-adapter-pattern/utils/required-method';
 import { assert } from '@ember/debug';
 import { get, set } from '@ember/object';
 import { on } from '@ember/object/evented';
-import { copy } from '@ember/object/internals';
 import { merge } from '@ember/polyfills';
 import { hash, resolve } from 'rsvp';
+import { copy } from 'ember-copy';
 
 export default Mixin.create({
 
