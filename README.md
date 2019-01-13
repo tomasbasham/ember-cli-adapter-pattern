@@ -15,6 +15,11 @@ This addon implements a common adapter pattern that can be included in any
 ember object allowing it to act as a proxy between the application and any
 external interface.
 
+## Compatibility
+
+* Ember.js v2.18 or above
+* Ember CLI v2.13 or above
+
 ## Installation
 
 From within your Ember CLI project directory run:
@@ -176,29 +181,6 @@ export default Service.extend(Adaptable, {
 Here we are passing the name of the API call as the first argument to `invoke`
 followed by the arguments that were passed into the API call.
 
-## Development
+## License
 
-### Installation
-
-* `git clone <repository-url>` this repository
-* `cd ember-cli-adapter-pattern`
-* `npm install`
-
-### Running
-
-* `ember serve`
-* Visit your app at [http://localhost:4200](http://localhost:4200).
-
-### Running Tests
-
-* `npm test` (Runs `ember try:each` to test your addon against multiple Ember
-  versions)
-* `ember test`
-* `ember test --server`
-
-### Building
-
-* `ember build`
-
-For more information on using ember-cli, visit
-[https://ember-cli.com/](https://ember-cli.com/).
+This project is licensed under the [MIT License](LICENSE.md).
