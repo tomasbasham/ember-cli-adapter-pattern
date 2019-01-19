@@ -9,8 +9,8 @@ import { module, test } from 'qunit';
 
 let sandbox, adapters;
 
-module('Unit | Mixin | adaptable', {
-  beforeEach() {
+module('Unit | Mixin | adaptable', function(hooks) {
+  hooks.beforeEach(function() {
     sandbox = Sinon.sandbox.create();
     adapters = {
       starships: [
@@ -28,157 +28,157 @@ module('Unit | Mixin | adaptable', {
         }
       ]
     };
-  },
+  });
 
-  afterEach() {
+  hooks.afterEach(function() {
     sandbox.restore();
-  }
-});
-
-test('it initialises the adapters object', function(assert) {
-  let AdaptableObject = EmberObject.extend(AdaptableMixin);
-  let subject = AdaptableObject.create();
-
-  assert.deepEqual(get(subject, '_adapters'), {});
-});
-
-test('it initialises the context object', function(assert) {
-  let AdaptableObject = EmberObject.extend(AdaptableMixin);
-  let subject = AdaptableObject.create();
-
-  assert.deepEqual(get(subject, 'context'), {});
-});
-
-test('it registers configured adapters', function(assert) {
-  let AdaptableObject = EmberObject.extend(AdaptableMixin);
-  let subject = AdaptableObject.create();
-
-  sandbox.stub(subject, '_lookupAdapter').callsFake(function() {
-    return Starship; // Return a non-instantiated adapter.
-  })
-
-  subject.activateAdapters(adapters.starships);
-  assert.ok(subject);
-});
-
-test('it passes config options to the configured adapters', function(assert) {
-  let AdaptableObject = EmberObject.extend(AdaptableMixin);
-  let subject = AdaptableObject.create();
-
-  sandbox.stub(subject, '_lookupAdapter').callsFake(function() {
-    return Starship; // Return a non-instantiated adapter.
   });
 
-  subject.activateAdapters(adapters.starships);
-  assert.equal(get(subject, '_adapters.Enterprise.config.captain'), 'Jean-Luc Picard');
-});
+  test('it initialises the adapters object', function(assert) {
+    let AdaptableObject = EmberObject.extend(AdaptableMixin);
+    let subject = AdaptableObject.create();
 
-test('#invoke invokes the named method on activated adapters', function(assert) {
-  assert.expect(6);
-
-  let AdaptableObject = EmberObject.extend(AdaptableMixin);
-  let subject = AdaptableObject.create();
-
-  sandbox.stub(subject, '_lookupAdapter').callsFake(function() {
-    return Starship; // Return a non-instantiated adapter.
+    assert.deepEqual(get(subject, '_adapters'), {});
   });
 
-  subject.activateAdapters(adapters.starships);
+  test('it initialises the context object', function(assert) {
+    let AdaptableObject = EmberObject.extend(AdaptableMixin);
+    let subject = AdaptableObject.create();
 
-  const EnterpriseStub = sandbox.stub(get(subject, '_adapters.Enterprise'), '_makeItSo');
-  const VoyagerStub = sandbox.stub(get(subject, '_adapters.Voyager'), '_makeItSo');
-
-  const EnterpriseSpy = sandbox.spy(get(subject, '_adapters.Enterprise'), 'warp');
-  const VoyagerSpy = sandbox.spy(get(subject, '_adapters.Voyager'), 'warp');
-
-  const warpFactor = {
-    factor: 8
-  };
-
-  subject.invoke('warp', warpFactor);
-
-  assert.ok(EnterpriseSpy.calledOnce);
-  assert.ok(EnterpriseSpy.calledWith(warpFactor));
-  assert.ok(EnterpriseStub.calledOnce);
-
-  assert.ok(VoyagerSpy.calledOnce);
-  assert.ok(VoyagerSpy.calledWith(warpFactor));
-  assert.ok(VoyagerStub.calledOnce);
-});
-
-test('#invoke invokes the named method on a single activated adapter', function(assert) {
-  assert.expect(3);
-
-  let AdaptableObject = EmberObject.extend(AdaptableMixin);
-  let subject = AdaptableObject.create();
-
-  sandbox.stub(subject, '_lookupAdapter').callsFake(function() {
-    return Starship; // Return a non-instantiated adapter.
+    assert.deepEqual(get(subject, 'context'), {});
   });
 
-  subject.activateAdapters(adapters.starships);
+  test('it registers configured adapters', function(assert) {
+    let AdaptableObject = EmberObject.extend(AdaptableMixin);
+    let subject = AdaptableObject.create();
 
-  const stub = sandbox.stub(get(subject, '_adapters.Enterprise'), '_makeItSo');
-  const spy = sandbox.spy(get(subject, '_adapters.Enterprise'), 'warp');
+    sandbox.stub(subject, '_lookupAdapter').callsFake(function() {
+      return Starship; // Return a non-instantiated adapter.
+    })
 
-  const warpFactor = {
-    factor: 8
-  };
-
-  subject.invoke('warp', 'Enterprise', warpFactor);
-
-  assert.ok(spy.calledOnce);
-  assert.ok(spy.calledWith(warpFactor));
-  assert.ok(stub.calledOnce);
-});
-
-test('#invoke includes `context` properties', function(assert) {
-  assert.expect(3);
-
-  let AdaptableObject = EmberObject.extend(AdaptableMixin);
-  let subject = AdaptableObject.create();
-
-  sandbox.stub(subject, '_lookupAdapter').callsFake(function() {
-    return Starship; // Return a non-instantiated adapter.
+    subject.activateAdapters(adapters.starships);
+    assert.ok(subject);
   });
 
-  subject.activateAdapters(adapters.starships);
+  test('it passes config options to the configured adapters', function(assert) {
+    let AdaptableObject = EmberObject.extend(AdaptableMixin);
+    let subject = AdaptableObject.create();
 
-  const stub = sandbox.stub(get(subject, '_adapters.Enterprise'), '_makeItSo');
-  const spy = sandbox.spy(get(subject, '_adapters.Enterprise'), 'warp');
+    sandbox.stub(subject, '_lookupAdapter').callsFake(function() {
+      return Starship; // Return a non-instantiated adapter.
+    });
 
-  const warpFactor = {
-    factor: 8
-  };
-
-  set(subject, 'context.warpCapabilities', true);
-  subject.invoke('warp', 'Enterprise', warpFactor);
-
-  assert.ok(spy.calledOnce);
-  assert.ok(spy.calledWith({ warpCapabilities: true, factor: 8 }));
-  assert.ok(stub.calledOnce);
-});
-
-test('#invoke does not leak options between calls', function(assert) {
-  assert.expect(3);
-
-  let AdaptableObject = EmberObject.extend(AdaptableMixin);
-  let subject = AdaptableObject.create();
-
-  sandbox.stub(subject, '_lookupAdapter').callsFake(function() {
-    return Starship; // Return a non-instantiated adapter.
+    subject.activateAdapters(adapters.starships);
+    assert.equal(get(subject, '_adapters.Enterprise.config.captain'), 'Jean-Luc Picard');
   });
 
-  subject.activateAdapters(adapters.starships);
+  test('#invoke invokes the named method on activated adapters', function(assert) {
+    assert.expect(6);
 
-  const stub = sandbox.stub(get(subject, '_adapters.Enterprise'), '_makeItSo');
-  const spy = sandbox.spy(get(subject, '_adapters.Enterprise'), 'warp');
+    let AdaptableObject = EmberObject.extend(AdaptableMixin);
+    let subject = AdaptableObject.create();
 
-  set(subject, 'context.warpCapabilities', true);
-  subject.invoke('warp', 'Enterprise', { factor: 8, callOne: true });
-  subject.invoke('warp', 'Enterprise', { factor: 8, callTwo: true });
+    sandbox.stub(subject, '_lookupAdapter').callsFake(function() {
+      return Starship; // Return a non-instantiated adapter.
+    });
 
-  assert.ok(spy.called);
-  assert.ok(spy.calledWith({ warpCapabilities: true, factor: 8, callTwo: true }));
-  assert.ok(stub.called);
+    subject.activateAdapters(adapters.starships);
+
+    const EnterpriseStub = sandbox.stub(get(subject, '_adapters.Enterprise'), '_makeItSo');
+    const VoyagerStub = sandbox.stub(get(subject, '_adapters.Voyager'), '_makeItSo');
+
+    const EnterpriseSpy = sandbox.spy(get(subject, '_adapters.Enterprise'), 'warp');
+    const VoyagerSpy = sandbox.spy(get(subject, '_adapters.Voyager'), 'warp');
+
+    const warpFactor = {
+      factor: 8
+    };
+
+    subject.invoke('warp', warpFactor);
+
+    assert.ok(EnterpriseSpy.calledOnce);
+    assert.ok(EnterpriseSpy.calledWith(warpFactor));
+    assert.ok(EnterpriseStub.calledOnce);
+
+    assert.ok(VoyagerSpy.calledOnce);
+    assert.ok(VoyagerSpy.calledWith(warpFactor));
+    assert.ok(VoyagerStub.calledOnce);
+  });
+
+  test('#invoke invokes the named method on a single activated adapter', function(assert) {
+    assert.expect(3);
+
+    let AdaptableObject = EmberObject.extend(AdaptableMixin);
+    let subject = AdaptableObject.create();
+
+    sandbox.stub(subject, '_lookupAdapter').callsFake(function() {
+      return Starship; // Return a non-instantiated adapter.
+    });
+
+    subject.activateAdapters(adapters.starships);
+
+    const stub = sandbox.stub(get(subject, '_adapters.Enterprise'), '_makeItSo');
+    const spy = sandbox.spy(get(subject, '_adapters.Enterprise'), 'warp');
+
+    const warpFactor = {
+      factor: 8
+    };
+
+    subject.invoke('warp', 'Enterprise', warpFactor);
+
+    assert.ok(spy.calledOnce);
+    assert.ok(spy.calledWith(warpFactor));
+    assert.ok(stub.calledOnce);
+  });
+
+  test('#invoke includes `context` properties', function(assert) {
+    assert.expect(3);
+
+    let AdaptableObject = EmberObject.extend(AdaptableMixin);
+    let subject = AdaptableObject.create();
+
+    sandbox.stub(subject, '_lookupAdapter').callsFake(function() {
+      return Starship; // Return a non-instantiated adapter.
+    });
+
+    subject.activateAdapters(adapters.starships);
+
+    const stub = sandbox.stub(get(subject, '_adapters.Enterprise'), '_makeItSo');
+    const spy = sandbox.spy(get(subject, '_adapters.Enterprise'), 'warp');
+
+    const warpFactor = {
+      factor: 8
+    };
+
+    set(subject, 'context.warpCapabilities', true);
+    subject.invoke('warp', 'Enterprise', warpFactor);
+
+    assert.ok(spy.calledOnce);
+    assert.ok(spy.calledWith({ warpCapabilities: true, factor: 8 }));
+    assert.ok(stub.calledOnce);
+  });
+
+  test('#invoke does not leak options between calls', function(assert) {
+    assert.expect(3);
+
+    let AdaptableObject = EmberObject.extend(AdaptableMixin);
+    let subject = AdaptableObject.create();
+
+    sandbox.stub(subject, '_lookupAdapter').callsFake(function() {
+      return Starship; // Return a non-instantiated adapter.
+    });
+
+    subject.activateAdapters(adapters.starships);
+
+    const stub = sandbox.stub(get(subject, '_adapters.Enterprise'), '_makeItSo');
+    const spy = sandbox.spy(get(subject, '_adapters.Enterprise'), 'warp');
+
+    set(subject, 'context.warpCapabilities', true);
+    subject.invoke('warp', 'Enterprise', { factor: 8, callOne: true });
+    subject.invoke('warp', 'Enterprise', { factor: 8, callTwo: true });
+
+    assert.ok(spy.called);
+    assert.ok(spy.calledWith({ warpCapabilities: true, factor: 8, callTwo: true }));
+    assert.ok(stub.called);
+  });
 });
