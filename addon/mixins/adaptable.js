@@ -5,8 +5,7 @@ import requiredMethod from 'ember-cli-adapter-pattern/utils/required-method';
 import { assert } from '@ember/debug';
 import { get, set } from '@ember/object';
 import { on } from '@ember/object/evented';
-import { copy } from '@ember/object/internals';
-import { merge } from '@ember/polyfills';
+import { assign } from '@ember/polyfills';
 import { hash, resolve } from 'rsvp';
 
 export default Mixin.create({
@@ -97,8 +96,8 @@ export default Mixin.create({
     const cachedAdapters = get(this, '_adapters');
     const adapterNames = Object.keys(cachedAdapters);
     const [selectedAdapterNames, options] = args.length > 1 ? [[args[0]], args[1]] : [adapterNames, args[0]];
-    const context = copy(get(this, 'context'));
-    const mergedOptions = merge(context, options);
+    const context = get(this, 'context');
+    const mergedOptions = assign({}, context, options);
 
     // Store a promise for each adapter response.
     const promises = {};
