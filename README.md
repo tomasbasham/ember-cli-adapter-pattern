@@ -1,4 +1,4 @@
-# ember-cli-adapter-pattern [![Build Status](https://travis-ci.com/tomasbasham/ember-cli-adapter-pattern.svg?branch=master)](https://travis-ci.com/tomasbasham/ember-cli-adapter-pattern)
+# ember-cli-adapter-pattern [![Build Status](https://travis-ci.com/tomasbasham/ember-cli-adapter-pattern.svg?branch=master)](https://travis-ci.com/tomasbasham/ember-cli-adapter-pattern) [![Maintainability](https://api.codeclimate.com/v1/badges/56fc7fabc8e2cb29e1d0/maintainability)](https://codeclimate.com/github/tomasbasham/ember-cli-adapter-pattern/maintainability)
 
 An [Ember CLI](https://ember-cli.com/) addon to standardise a common adapter
 pattern.
